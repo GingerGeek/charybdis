@@ -126,13 +126,15 @@ send_channel_join(struct Channel *chptr, struct Client *client_p)
 	if (!IsClient(client_p))
 		return;
 
-	sendto_channel_local_with_capability(ALL_MEMBERS, NOCAPS, CLICAP_EXTENDED_JOIN, chptr, ":%s!%s@%s JOIN %s",
+    if(!AuditoriumChannel(chptr)) {
+    	sendto_channel_local_with_capability(ALL_MEMBERS, NOCAPS, CLICAP_EXTENDED_JOIN, chptr, ":%s!%s@%s JOIN %s",
 					     client_p->name, client_p->username, client_p->host, chptr->chname);
 
-	sendto_channel_local_with_capability(ALL_MEMBERS, CLICAP_EXTENDED_JOIN, NOCAPS, chptr, ":%s!%s@%s JOIN %s %s :%s",
+    	sendto_channel_local_with_capability(ALL_MEMBERS, CLICAP_EXTENDED_JOIN, NOCAPS, chptr, ":%s!%s@%s JOIN %s %s :%s",
 					     client_p->name, client_p->username, client_p->host, chptr->chname,
 					     EmptyString(client_p->user->suser) ? "*" : client_p->user->suser,
 					     client_p->info);
+    }
 
 	/* Send away message to away-notify enabled clients. */
 	if (client_p->user->away)

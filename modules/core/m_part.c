@@ -124,7 +124,7 @@ part_one_client(struct Client *client_p, struct Client *source_p, char *name, co
 	 *  Remove user from the old channel (if any)
 	 *  only allow /part reasons in -m chans
 	 */
-	if(!EmptyString(reason) &&
+	if(!EmptyString(reason) && !AuditoriumChannel(chptr) &&
 		(!MyConnect(source_p) ||
 		 (can_send_part(source_p, chptr, msptr) && do_message_hook(source_p, chptr, &reason))
 		)
